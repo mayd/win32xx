@@ -1,0 +1,137 @@
+Only in win32xx/: .git
+Only in win32xx/: build
+Only in win32xx/: CMakeLists.txt
+Only in win32xx/: README.md
+diff -cr win32xx.old/samples/MovieShow/src/Mainfrm.cpp win32xx/samples/MovieShow/src/Mainfrm.cpp
+*** win32xx.old/samples/MovieShow/src/Mainfrm.cpp	2021-04-27 16:56:11.587278500 +0800
+--- win32xx/samples/MovieShow/src/Mainfrm.cpp	2021-04-27 16:55:54.547224400 +0800
+***************
+*** 13,18 ****
+--- 13,19 ----
+  #endif
+  
+  #include <gdiplus.h>
++ #include <shlwapi.h>
+  
+  #ifdef _MSC_VER
+  #pragma warning (default : 4458) // enable declaration hides class member warning
+***************
+*** 56,63 ****
+--- 57,66 ----
+  
+      for (UINT j = 0; j < num; ++j)
+      {
++ #ifdef _MSC_VER
+  #pragma warning ( push )
+  #pragma warning ( disable : 6385 )       // '208' bytse might be read.
++ #endif
+          // Correct code incorrectly flaged with a C6385 warning by the VS2019 analyser.
+          if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
+          {
+***************
+*** 65,71 ****
+--- 68,76 ----
+              free(pImageCodecInfo);
+              return j;  // Success
+          }
++ #ifdef _MSC_VER
+  #pragma warning ( pop )  // ( disable : 6385 )    '208' bytse might be read.
++ #endif
+      }
+  
+      free(pImageCodecInfo);
+***************
+*** 167,173 ****
+  
+                      CLSID gifClsid;
+                      GetEncoderClsid(L"image/gif", &gifClsid);
+!                     VERIFY(Gdiplus::Ok == img->Save(stream, &gifClsid));
+  
+                      // Get the size of the stream
+                      ULARGE_INTEGER streamSize;
+--- 172,178 ----
+  
+                      CLSID gifClsid;
+                      GetEncoderClsid(L"image/gif", &gifClsid);
+!                     VERIFY(Gdiplus::Ok == img->Save(stream, &gifClsid, NULL));
+  
+                      // Get the size of the stream
+                      ULARGE_INTEGER streamSize;
+***************
+*** 476,482 ****
+  std::vector<CString> CMainFrame::GetWords(const CString& str) const
+  {
+      int position = 0;
+!     CString token = str.Tokenize(L" ", position);
+      std::vector<CString> words;
+      while (!token.IsEmpty())
+      {
+--- 481,488 ----
+  std::vector<CString> CMainFrame::GetWords(const CString& str) const
+  {
+      int position = 0;
+!     //CString token =str.Tokenize(L" ", position);
+!     CString token = (LPCTSTR)str.Tokenize(_T(" "), position);
+      std::vector<CString> words;
+      while (!token.IsEmpty())
+      {
+diff -cr win32xx.old/samples/MovieShow/src/Resource.rc win32xx/samples/MovieShow/src/Resource.rc
+*** win32xx.old/samples/MovieShow/src/Resource.rc	2021-04-27 16:57:39.555680500 +0800
+--- win32xx/samples/MovieShow/src/Resource.rc	2021-04-27 16:57:17.045772700 +0800
+***************
+*** 49,55 ****
+          BEGIN
+              MENUITEM "None",                    IDM_BOXSET_0
+          END
+!         MENUITEM "&Watch List"                  IDM_WATCHLIST
+          MENUITEM "&Remove File From Library",   IDM_REMOVE_FILE
+      END
+  END
+--- 49,55 ----
+          BEGIN
+              MENUITEM "None",                    IDM_BOXSET_0
+          END
+!         MENUITEM "&Watch List",                  IDM_WATCHLIST
+          MENUITEM "&Remove File From Library",   IDM_REMOVE_FILE
+      END
+  END
+diff -cr win32xx.old/samples/NetSimple/src/Client.cpp win32xx/samples/NetSimple/src/Client.cpp
+*** win32xx.old/samples/NetSimple/src/Client.cpp	2021-04-27 17:00:05.128302000 +0800
+--- win32xx/samples/NetSimple/src/Client.cpp	2021-04-27 16:59:50.342345600 +0800
+***************
+*** 54,60 ****
+      {
+          getline(cin, s);
+          if (s == "quit") break;
+!         int i = client.SendTo(s.c_str(), static_cast<int>(s.length()), 0, "127.0.0.1", 3000);
+          cout << "Sending  " << i << " characters\n";
+      }
+  
+--- 54,60 ----
+      {
+          getline(cin, s);
+          if (s == "quit") break;
+!         int i = client.SendTo(s.c_str(), static_cast<int>(s.length()), 0, (LPCTSTR)"127.0.0.1", (UINT)3000);
+          cout << "Sending  " << i << " characters\n";
+      }
+  
+diff -cr win32xx.old/samples/NetSimple/src/Server.cpp win32xx/samples/NetSimple/src/Server.cpp
+*** win32xx.old/samples/NetSimple/src/Server.cpp	2021-04-27 17:00:55.736431100 +0800
+--- win32xx/samples/NetSimple/src/Server.cpp	2021-04-27 17:00:36.962455200 +0800
+***************
+*** 55,61 ****
+      }
+  
+      // Bind the IP address and port# to the main socket
+!     if (SOCKET_ERROR == server.Bind("127.0.0.1", 3000))
+      {
+          cout << "Failed to bind IP address to socket\n" ;
+          return 0;
+--- 55,61 ----
+      }
+  
+      // Bind the IP address and port# to the main socket
+!     if (SOCKET_ERROR == server.Bind((LPCTSTR)"127.0.0.1", (UINT)3000))
+      {
+          cout << "Failed to bind IP address to socket\n" ;
+          return 0;

@@ -704,34 +704,34 @@ target_link_libraries(MetaFile comctl32 ws2_32)
 # MSYS2  mingw-w64/mingw-w64-headers/include/shlwapi.h missing IStream_Size, IStream_Reset, IStream_Read, IStream_Write
 # MSYS2 bug report "[headers] shlwapi.h missing IStream_* functions #7451" <https://github.com/msys2/MINGW-packages/issues/7451>
 
-#add_executable(MovieShow WIN32
-#        samples/MovieShow/src/CoverImage.cpp
-#        samples/MovieShow/src/CoverImage.h
-#        samples/MovieShow/src/List.cpp
-#        samples/MovieShow/src/List.h
-#        samples/MovieShow/src/main.cpp
-#        samples/MovieShow/src/Mainfrm.cpp
-#        samples/MovieShow/src/Mainfrm.h
-#        samples/MovieShow/src/MediaInfoDLL.h
-#        samples/MovieShow/src/MovieInfo.h
-#        samples/MovieShow/src/MovieShowApp.cpp
-#        samples/MovieShow/src/MovieShowApp.h
-#        samples/MovieShow/src/MyDialog.cpp
-#        samples/MovieShow/src/MyDialog.h
-#        samples/MovieShow/src/resource.h
-#        samples/MovieShow/src/Resource.rc
-#        samples/MovieShow/src/SearchDialog.cpp
-#        samples/MovieShow/src/SearchDialog.h
-#        samples/MovieShow/src/Splash.cpp
-#        samples/MovieShow/src/Splash.h
-#        samples/MovieShow/src/StdAfx.cpp
-#        samples/MovieShow/src/stdafx.h
-#        samples/MovieShow/src/targetver.h
-#        samples/MovieShow/src/Tree.cpp
-#        samples/MovieShow/src/Tree.h
-#        samples/MovieShow/src/UserMessages.h)
-#target_include_directories(MovieShow PRIVATE include/)
-#target_link_libraries(MovieShow comctl32 ws2_32)
+add_executable(MovieShow WIN32
+        samples/MovieShow/src/CoverImage.cpp
+        samples/MovieShow/src/CoverImage.h
+        samples/MovieShow/src/List.cpp
+        samples/MovieShow/src/List.h
+        samples/MovieShow/src/main.cpp
+        samples/MovieShow/src/Mainfrm.cpp
+        samples/MovieShow/src/Mainfrm.h
+        samples/MovieShow/src/MediaInfoDLL.h
+        samples/MovieShow/src/MovieInfo.h
+        samples/MovieShow/src/MovieShowApp.cpp
+        samples/MovieShow/src/MovieShowApp.h
+        samples/MovieShow/src/MyDialog.cpp
+        samples/MovieShow/src/MyDialog.h
+        samples/MovieShow/src/resource.h
+        samples/MovieShow/src/Resource.rc
+        samples/MovieShow/src/SearchDialog.cpp
+        samples/MovieShow/src/SearchDialog.h
+        samples/MovieShow/src/Splash.cpp
+        samples/MovieShow/src/Splash.h
+        samples/MovieShow/src/StdAfx.cpp
+        samples/MovieShow/src/stdafx.h
+        samples/MovieShow/src/targetver.h
+        samples/MovieShow/src/Tree.cpp
+        samples/MovieShow/src/Tree.h
+        samples/MovieShow/src/UserMessages.h)
+target_include_directories(MovieShow PRIVATE include/)
+target_link_libraries(MovieShow gdiplus uxtheme comctl32 ws2_32 crypt32 shlwapi)
 
 # ================================================================== samples/NetClient
 
@@ -803,11 +803,15 @@ target_link_libraries(NetServerAsync comctl32 ws2_32)
 
 # ================================================================== samples/NetSimple
 
-#add_executable(NetSimple WIN32
-#        samples/NetSimple/src/Client.cpp
-#        samples/NetSimple/src/Server.cpp)
-#target_include_directories(NetSimple PRIVATE include/)
-#target_link_libraries(NetSimple comctl32 ws2_32)
+add_executable(NetSimpleClient WIN32
+        samples/NetSimple/src/Client.cpp)
+target_include_directories(NetSimpleClient PRIVATE include/)
+target_link_libraries(NetSimpleClient comctl32 ws2_32)
+
+add_executable(NetSimpleServer WIN32
+        samples/NetSimple/src/Server.cpp)
+target_include_directories(NetSimpleServer PRIVATE include/)
+target_link_libraries(NetSimpleServer comctl32 ws2_32)
 
 # ================================================================== samples/New Project
 
